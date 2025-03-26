@@ -2,7 +2,7 @@
   <section class="mx-auto max-w-7xl px-2 py-8 sm:py-12">
     <h2 class="flex items-center gap-2 pb-6 text-xl font-semibold"><Icon name="material-symbols:movie-sharp" size="24" />Trending Movies</h2>
 
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
       <section v-for="trendingMovie in trendingMovies" :key="trendingMovie.id">
         <MovieCard
           :id="trendingMovie.id"

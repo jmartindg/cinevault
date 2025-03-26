@@ -2,7 +2,7 @@
   <article class="w-full cursor-pointer overflow-hidden rounded-lg">
     <NuxtLink :to="`/${media_type}/${id}`">
       <div class="relative overflow-hidden lg:h-[380px] xl:h-[450px]">
-        <NuxtImg v-if="poster_path" :src="poster_path" :alt="title" class="h-full w-full object-cover transition-transform duration-500 hover:scale-105" />
+        <NuxtImg v-if="poster_path" :src="poster_path" :alt="title" class="h-full w-full object-cover transition-transform duration-500 hover:scale-105" placeholder />
         <div v-else class="flex h-full w-full items-center justify-center bg-gray-800 text-sm text-gray-500">No Image</div>
         <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-4">
           <div class="inline-flex items-center gap-1 rounded bg-black/60 px-2 py-1 text-sm font-bold text-white">
