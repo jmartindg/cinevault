@@ -36,6 +36,10 @@ const content = reactive<Content>({
   description: "Discover, track, and organize your favorite movies and TV shows all in one place.",
 });
 
+onMounted(() => {
+  getBackdropPath();
+});
+
 const backdropStyle = computed(() => {
   const url = getBackdropUrl(backdropPath.value);
   return url
@@ -43,10 +47,6 @@ const backdropStyle = computed(() => {
         backgroundImage: `url(${url})`,
       }
     : {};
-});
-
-onMounted(() => {
-  getBackdropPath();
 });
 
 const getBackdropUrl = (backdropPath: string) => {
