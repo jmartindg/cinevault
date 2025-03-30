@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-base-300">
-    <header class="mx-auto max-w-7xl">
+  <header class="bg-base-300">
+    <div class="mx-auto max-w-7xl">
       <nav class="navbar items-center justify-between">
         <p class="text-xl font-bold">CineVault</p>
         <ul class="flex items-center space-x-4">
@@ -11,8 +11,8 @@
           </li>
         </ul>
       </nav>
-    </header>
-  </div>
+    </div>
+  </header>
 </template>
 
 <script setup lang="ts">

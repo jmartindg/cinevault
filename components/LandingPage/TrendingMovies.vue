@@ -7,10 +7,10 @@
         <MovieCard
           :id="trendingMovie.id"
           :title="trendingMovie.title"
-          :average_rating="trendingMovie.vote_average"
-          :poster_path="getPosterUrl(trendingMovie.poster_path)"
-          :release_date="formatReleaseDate(trendingMovie.release_date)"
-          :media_type="trendingMovie.media_type"
+          :average-rating="trendingMovie.vote_average"
+          :poster-path="getPosterUrl(trendingMovie.poster_path)"
+          :release-date="formatReleaseDate(trendingMovie.release_date)"
+          :media-type="trendingMovie.media_type"
         />
       </section>
     </div>

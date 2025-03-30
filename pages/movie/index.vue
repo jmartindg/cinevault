@@ -7,18 +7,45 @@
         <MovieCard
           :id="trendingMovie.id"
           :title="trendingMovie.title"
-          :average_rating="trendingMovie.vote_average"
-          :poster_path="getPosterUrl(trendingMovie.poster_path)"
-          :release_date="formatReleaseDate(trendingMovie.release_date)"
-          :media_type="trendingMovie.media_type"
+          :average-rating="trendingMovie.vote_average"
+          :poster-path="getPosterUrl(trendingMovie.poster_path)"
+          :release-date="formatReleaseDate(trendingMovie.release_date)"
+          :media-type="trendingMovie.media_type"
         />
       </section>
     </div>
 
-    <div class="join mt-8 flex justify-center">
-      <button @click="prevPage" class="join-item btn btn-primary">«</button>
-      <button class="join-item btn">Page {{ page }}</button>
-      <button @click="nextPage" class="join-item btn btn-primary">»</button>
+    <div v-if="totalPages > 0" class="mt-8 flex justify-center">
+      <div class="flex items-center gap-4">
+        <button
+          :disabled="page === 1"
+          class="rounded px-4 py-2 text-sm font-medium text-white transition-colors"
+          :class="page === 1 ? 'cursor-not-allowed bg-gray-400' : 'bg-primary hover:bg-primary/80 cursor-pointer'"
+          @click="changePage(page - 1)"
+        >
+          <span class="flex items-center gap-1">
+            <Icon name="material-symbols:arrow-back-ios" size="14" />
+            Previous
+          </span>
+        </button>
+
+        <span class="text-sm">
+          Page {{ page }} of {{ totalPages }}
+          <span class="ml-2 text-xs text-gray-500">({{ totalResults }} results)</span>
+        </span>
+
+        <button
+          :disabled="page === totalPages"
+          class="rounded px-4 py-2 text-sm font-medium text-white transition-colors"
+          :class="page === totalPages ? 'cursor-not-allowed bg-gray-400' : 'bg-primary hover:bg-primary/80 cursor-pointer'"
+          @click="changePage(page + 1)"
+        >
+          <span class="flex items-center gap-1">
+            Next
+            <Icon name="material-symbols:arrow-forward-ios" size="14" />
+          </span>
+        </button>
+      </div>
     </div>
   </section>
 </template>
@@ -35,21 +62,24 @@ interface PopularMovie {
 
 interface Results {
   results: PopularMovie[];
+  page: number;
+  total_pages: number;
+  total_results: number;
 }
 
 const route = useRoute();
 const router = useRouter();
 const config = useRuntimeConfig();
 const popularMovies = ref<PopularMovie[]>([]);
-const page = ref(1);
+const page = ref(parseInt(route.query.page as string) || 1);
 const loading = ref(true);
 const error = ref(null as string | null);
 const imageBaseUrl = ref("https://image.tmdb.org/t/p/w500");
+const totalPages = ref(0);
+const totalResults = ref(0);
 
 onMounted(() => {
-  if (route.query.page) {
-    page.value = parseInt(route.query.page as string) || 1;
-  } else {
+  if (!route.query.page) {
     router.push({ query: { ...route.query, page: 1 } });
   }
   getPopularMovies();
@@ -93,6 +123,8 @@ const getPopularMovies = async () => {
       },
     });
     popularMovies.value = res.results;
+    totalPages.value = res.total_pages || 0;
+    totalResults.value = res.total_results || 0;
   } catch (err) {
     console.error(err);
     error.value = "Failed to fetch popular movies";
@@ -101,22 +133,20 @@ const getPopularMovies = async () => {
   }
 };
 
-const nextPage = async () => {
-  const nextPageNum = page.value + 1;
-  await router.push({ query: { ...route.query, page: nextPageNum } });
-  page.value = nextPageNum;
-  await getPopularMovies();
-  window.scrollTo(0, 0);
-};
+const changePage = async (newPage: number) => {
+  if (newPage < 1 || newPage > totalPages.value) return;
 
-const prevPage = async () => {
-  if (page.value > 1) {
-    const prevPageNum = page.value - 1;
-    await router.push({ query: { ...route.query, page: prevPageNum } });
-    page.value = prevPageNum;
-    await getPopularMovies();
-    window.scrollTo(0, 0);
-  }
+  await router.push({
+    query: {
+      ...route.query,
+      page: newPage,
+    },
+  });
+
+  page.value = newPage;
+  await getPopularMovies();
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
 };
 </script>
 

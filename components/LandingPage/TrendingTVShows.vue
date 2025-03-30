@@ -7,10 +7,10 @@
         <MovieCard
           :id="trendingTVShow.id"
           :title="trendingTVShow.name"
-          :average_rating="trendingTVShow.vote_average"
-          :poster_path="getPosterUrl(trendingTVShow.poster_path)"
-          :release_date="formatReleaseDate(trendingTVShow.first_air_date)"
-          :media_type="trendingTVShow.media_type"
+          :average-rating="trendingTVShow.vote_average"
+          :poster-path="getPosterUrl(trendingTVShow.poster_path)"
+          :release-date="formatReleaseDate(trendingTVShow.first_air_date)"
+          :media-type="trendingTVShow.media_type"
         />
       </section>
     </div>

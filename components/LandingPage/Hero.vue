@@ -1,11 +1,12 @@
 <template>
   <main class="hero-section py-12 md:py-28" :style="backdropStyle">
-    <div class="overlay"></div>
+    <div class="overlay" />
     <section class="relative z-10 mx-auto flex max-w-7xl flex-col items-center px-4 text-center md:px-8">
       <h1 class="mb-4 text-3xl font-bold tracking-tight text-white md:text-5xl lg:text-6xl">{{ content.title }}</h1>
       <p class="mx-auto mt-4 mb-8 max-w-3xl text-lg text-white/90 md:text-xl">{{ content.description }}</p>
-      <form class="flex w-full flex-col justify-center gap-2 sm:flex-row">
-        <input type="search" placeholder="Search movies or TV shows" class="input input-bordered input-lg w-full md:w-xl xl:w-2xl" />
+      <form class="flex w-full flex-col justify-center gap-2 sm:flex-row" @submit.prevent="goToSearchResults">
+        <!-- eslint-disable-next-line vue/html-self-closing -->
+        <input v-model="searchQuery" type="search" placeholder="Search movies or TV shows" class="input input-bordered input-lg w-full md:w-xl xl:w-2xl" />
         <button type="submit" class="btn btn-primary btn-lg">Search</button>
       </form>
     </section>
@@ -29,6 +30,7 @@ interface Results {
 const config = useRuntimeConfig();
 const backdropPath = ref<string>("");
 const imageBaseUrl = ref("https://image.tmdb.org/t/p/original");
+const searchQuery = ref<string>("");
 const content = reactive<Content>({
   title: "Your Ultimate Movie & TV Shows Archive",
   description: "Discover, track, and organize your favorite movies and TV shows all in one place.",
@@ -68,6 +70,17 @@ const getBackdropPath = async () => {
     }
   } catch (err) {
     console.error(err);
+  }
+};
+
+const goToSearchResults = async () => {
+  if (searchQuery.value.trim()) {
+    navigateTo({
+      path: "/search-results",
+      query: {
+        q: searchQuery.value,
+      },
+    });
   }
 };
 </script>

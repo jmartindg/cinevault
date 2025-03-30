@@ -1,7 +1,9 @@
 <template>
-  <LandingPageHero />
-  <LandingPageTrendingMovies />
-  <LandingPageTrendingTVShows />
+  <div>
+    <LandingPageHero />
+    <LandingPageTrendingMovies />
+    <LandingPageTrendingTVShows />
+  </div>
 </template>
 
 <script setup lang="ts"></script>
