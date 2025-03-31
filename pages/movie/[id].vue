@@ -59,7 +59,7 @@
     <section class="mx-auto max-w-7xl px-2 py-8 sm:py-12">
       <h3 class="flex items-center gap-2 pb-6 text-2xl font-bold"><Icon name="material-symbols:person-rounded" size="24" /> Cast</h3>
 
-      <Splide :options="{ perPage: 5, perMove: 1, breakpoints: splideBreakpoints, pagination: false, gap: 14, lazyLoad: true }" aria-labelledby="cast">
+      <Splide v-if="movieDetails?.credits?.cast.length" :options="{ perPage: 5, perMove: 1, breakpoints: splideBreakpoints, pagination: false, gap: 14, lazyLoad: true }" aria-labelledby="cast">
         <SplideSlide v-for="cast in movieDetails?.credits?.cast" :key="cast.id">
           <NuxtLink :to="`/person/${cast.id}`" class="flex flex-col items-center overflow-hidden">
             <div class="mb-2">
@@ -83,6 +83,8 @@
           </NuxtLink>
         </SplideSlide>
       </Splide>
+
+      <p v-else class="text-base-content py-12 text-center text-sm">No cast available.</p>
 
       <h3 class="flex items-center gap-2 pt-6 pb-3 text-2xl font-bold"><Icon name="material-symbols:movie-sharp" size="24" /> Reviews</h3>
 
@@ -122,20 +124,22 @@
 
       <h3 class="flex items-center gap-2 py-6 text-2xl font-bold"><Icon name="material-symbols:movie-sharp" size="24" /> You may also like</h3>
 
-      <Splide :options="{ perPage: 4, perMove: 1, breakpoints: splideBreakpoints, pagination: false, gap: 14, lazyLoad: true }" aria-labelledby="cast">
+      <Splide v-if="similarMovies?.results.length" :options="{ perPage: 4, perMove: 1, breakpoints: splideBreakpoints, pagination: false, gap: 14, lazyLoad: true }" aria-labelledby="cast">
         <SplideSlide v-for="similar in similarMovies?.results || []" :key="similar.id">
-          <NuxtLink :to="`/movie/${similar.id}`" class="flex flex-col items-center overflow-hidden">
+          <NuxtLink :to="`${similar.id}`" class="flex flex-col items-center overflow-hidden">
             <MovieCard
               :id="similar.id"
               :title="similar.title"
               :poster-path="getPosterUrl(similar.poster_path)"
               :release-date="formatReleaseDate(similar.release_date)"
               :average-rating="similar.vote_average"
-              :media-type="similar.media_type"
+              media-type="movie"
             />
           </NuxtLink>
         </SplideSlide>
       </Splide>
+
+      <p v-else class="text-base-content py-12 text-center text-sm">No similar movies available.</p>
     </section>
   </div>
 </template>

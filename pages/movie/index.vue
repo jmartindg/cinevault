@@ -10,7 +10,7 @@
           :average-rating="trendingMovie.vote_average"
           :poster-path="getPosterUrl(trendingMovie.poster_path)"
           :release-date="formatReleaseDate(trendingMovie.release_date)"
-          :media-type="trendingMovie.media_type"
+          media-type="movie"
         />
       </section>
     </div>

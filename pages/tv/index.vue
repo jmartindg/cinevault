@@ -10,7 +10,7 @@
           :average-rating="popularTVShow.vote_average"
           :poster-path="getPosterUrl(popularTVShow.poster_path)"
           :first-air-date="formatReleaseDate(popularTVShow.first_air_date)"
-          :media-type="popularTVShow.media_type"
+          media-type="tv"
         />
       </section>
     </div>

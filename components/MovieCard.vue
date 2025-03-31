@@ -75,7 +75,7 @@ defineProps({
   mediaType: {
     type: String,
     required: false,
-    default: "movie",
+    default: "",
   },
 });
 </script>
