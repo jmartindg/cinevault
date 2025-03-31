@@ -1,5 +1,5 @@
 <template>
-  <section class="mx-auto max-w-7xl px-2 py-8 sm:py-12">
+  <section class="mx-auto max-w-7xl px-4 py-8 sm:py-12 xl:px-0">
     <h2 class="flex items-center gap-2 pb-6 text-xl font-semibold"><Icon name="material-symbols:live-tv" size="24" />Popular TV Shows</h2>
 
     <div class="grid grid-cols-2 gap-4 md:grid-cols-4">

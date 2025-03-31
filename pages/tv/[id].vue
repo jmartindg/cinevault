@@ -2,7 +2,7 @@
   <div>
     <div class="hero-section py-12 md:py-16" :style="backdropStyle">
       <div class="overlay" />
-      <section class="relative z-10 mx-auto max-w-7xl px-2 py-8 sm:py-12">
+      <section class="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:py-12 xl:px-0">
         <section class="grid gap-8 md:grid-cols-12">
           <section class="md:col-span-4 lg:col-span-3">
             <NuxtImg
@@ -56,31 +56,29 @@
       </section>
     </div>
 
-    <section class="mx-auto max-w-7xl px-2 py-8 sm:py-12">
+    <section class="mx-auto max-w-7xl px-4 py-8 sm:py-12 xl:px-0">
       <h3 class="flex items-center gap-2 pb-6 text-2xl font-bold"><Icon name="material-symbols:person-rounded" size="24" /> Cast</h3>
 
       <Splide v-if="tvShowDetails?.credits?.cast.length" :options="{ perPage: 5, perMove: 1, breakpoints: splideBreakpoints, pagination: false, gap: 14, lazyLoad: true }" aria-labelledby="cast">
-        <SplideSlide v-for="cast in tvShowDetails?.credits?.cast" :key="cast.id">
-          <NuxtLink :to="`/person/${cast.id}`" class="flex flex-col items-center overflow-hidden">
-            <div class="mb-2">
-              <div class="overflow-hidden rounded-lg transition-all duration-300">
-                <NuxtImg
-                  :src="cast.profile_path ? getPosterUrl(cast.profile_path) : '/images/no-image-placeholder.png'"
-                  :alt="cast.name"
-                  class="rounded-lg object-cover transition-transform duration-300 hover:scale-110"
-                  format="webp"
-                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 300px"
-                  width="400"
-                  height="550"
-                  placeholder
-                />
-              </div>
+        <SplideSlide v-for="cast in tvShowDetails?.credits?.cast" :key="cast.id" class="flex flex-col items-center overflow-hidden">
+          <div class="mb-2">
+            <div class="overflow-hidden rounded-lg transition-all duration-300">
+              <NuxtImg
+                :src="cast.profile_path ? getPosterUrl(cast.profile_path) : '/images/no-image-placeholder.png'"
+                :alt="cast.name"
+                class="rounded-lg object-cover transition-transform duration-300 hover:scale-110"
+                format="webp"
+                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 300px"
+                width="400"
+                height="550"
+                placeholder
+              />
             </div>
-            <div class="py-2">
-              <h4 class="line-clamp-1 text-center text-sm font-semibold">{{ cast.name }}</h4>
-              <p class="text-neutral-content line-clamp-1 pt-1 text-center text-xs">{{ cast.character }}</p>
-            </div>
-          </NuxtLink>
+          </div>
+          <div class="py-2">
+            <h4 class="line-clamp-1 text-center text-sm font-semibold">{{ cast.name }}</h4>
+            <p class="text-neutral-content line-clamp-1 pt-1 text-center text-xs">{{ cast.character }}</p>
+          </div>
         </SplideSlide>
       </Splide>
 
@@ -125,17 +123,15 @@
       <h3 class="flex items-center gap-2 py-6 text-2xl font-bold"><Icon name="material-symbols:movie-sharp" size="24" /> You may also like</h3>
 
       <Splide v-if="similarTvShows?.results.length" :options="{ perPage: 4, perMove: 1, breakpoints: splideBreakpoints, pagination: false, gap: 14, lazyLoad: true }" aria-labelledby="cast">
-        <SplideSlide v-for="similar in similarTvShows?.results || []" :key="similar.id">
-          <NuxtLink :to="`${similar.id}`" class="flex flex-col items-center overflow-hidden">
-            <MovieCard
-              :id="similar.id"
-              :name="similar.name"
-              :poster-path="getPosterUrl(similar.poster_path)"
-              :release-date="formatReleaseDate(similar.first_air_date)"
-              :average-rating="similar.vote_average"
-              media-type="tv"
-            />
-          </NuxtLink>
+        <SplideSlide v-for="similar in similarTvShows?.results || []" :key="similar.id" class="flex flex-col items-center overflow-hidden">
+          <MovieCard
+            :id="similar.id"
+            :name="similar.name"
+            :poster-path="getPosterUrl(similar.poster_path)"
+            :release-date="formatReleaseDate(similar.first_air_date)"
+            :average-rating="similar.vote_average"
+            media-type="tv"
+          />
         </SplideSlide>
       </Splide>
 
@@ -229,11 +225,20 @@ const imageBaseUrl = ref("https://image.tmdb.org/t/p/w500");
 const backdropBaseUrl = ref("https://image.tmdb.org/t/p/original");
 
 const splideBreakpoints = {
-  640: {
+  320: {
     perPage: 2,
   },
-  768: {
+  375: {
+    perPage: 2,
+  },
+  480: {
+    perPage: 2,
+  },
+  640: {
     perPage: 3,
+  },
+  768: {
+    perPage: 4,
   },
   1024: {
     perPage: 4,
