@@ -1,5 +1,11 @@
 <template>
   <section class="mx-auto max-w-7xl px-4 py-8 sm:py-12 xl:px-0">
+    <form class="mb-8 flex w-full flex-col justify-center gap-2 sm:mb-12 sm:flex-row" @submit.prevent="goToSearchResults">
+      <!-- eslint-disable-next-line vue/html-self-closing -->
+      <input v-model="searchQuery" type="search" placeholder="Search movies" class="input input-bordered input-lg w-full" />
+      <button type="submit" class="btn btn-primary btn-lg">Search</button>
+    </form>
+
     <h2 class="flex items-center gap-2 pb-6 text-xl font-semibold"><Icon name="material-symbols:movie-sharp" size="24" />Popular Movies</h2>
 
     <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -70,6 +76,7 @@ interface Results {
 const route = useRoute();
 const router = useRouter();
 const config = useRuntimeConfig();
+const searchQuery = ref<string>("");
 const popularMovies = ref<PopularMovie[]>([]);
 const page = ref(parseInt(route.query.page as string) || 1);
 const loading = ref(true);
@@ -147,6 +154,19 @@ const changePage = async (newPage: number) => {
   await getPopularMovies();
 
   window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
+const goToSearchResults = async () => {
+  if (searchQuery.value.trim()) {
+    navigateTo({
+      path: "/search-results",
+      query: {
+        q: searchQuery.value,
+        media_type: "movie",
+        page: 1,
+      },
+    });
+  }
 };
 </script>
 

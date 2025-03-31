@@ -1,8 +1,18 @@
 <template>
   <section class="mx-auto max-w-7xl px-2 py-8 sm:py-12">
+    <form class="mb-8 flex w-full flex-col justify-center gap-2 sm:mb-12 sm:flex-row" @submit.prevent="submitSearch">
+      <!-- eslint-disable-next-line vue/html-self-closing -->
+      <input v-model="inputQuery" type="search" placeholder="Search TV shows" class="input input-bordered input-lg w-full" />
+      <button type="submit" class="btn btn-primary btn-lg">Search</button>
+    </form>
+
     <h2 class="flex items-center gap-2 pb-6 text-xl font-semibold"><Icon name="material-symbols:search-rounded" size="24" />Search Results for: {{ searchQuery }}</h2>
 
-    <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
+    <div v-if="isLoading" class="flex h-96 items-center justify-center">
+      <span class="loading loading-spinner loading-lg text-primary" />
+    </div>
+
+    <div v-else-if="searchResults.length" class="grid grid-cols-2 gap-4 md:grid-cols-4">
       <section v-for="searchResult in searchResults" :key="searchResult.id">
         <MovieCard
           :id="searchResult.id"
@@ -17,6 +27,10 @@
           :media-type="searchResult.media_type"
         />
       </section>
+    </div>
+
+    <div v-else class="flex h-96 items-center justify-center text-center text-gray-500">
+      <p>No results found for "{{ searchQuery }}".</p>
     </div>
 
     <div v-if="totalPages > 0" class="mt-8 flex justify-center">
@@ -78,7 +92,10 @@ interface Results {
 const config = useRuntimeConfig();
 const route = useRoute();
 const router = useRouter();
+const isLoading = ref(false);
 const imageBaseUrl = ref("https://image.tmdb.org/t/p/original");
+const mediaType = ref<string | null>((route.query.media_type as string) || null);
+const inputQuery = ref<string>((route.query.q as string) || "");
 const searchQuery = ref<string>((route.query.q as string) || "");
 const searchResults = ref<SearchResults[]>([]);
 const currentPage = ref(Number(route.query.page) || 1);
@@ -87,7 +104,7 @@ const totalResults = ref(0);
 
 onMounted(() => {
   if (searchQuery.value) {
-    multiSearch();
+    submitSearch();
   }
 });
 
@@ -97,25 +114,46 @@ watch(
     const newPage = Number(newQuery.page) || 1;
     if (currentPage.value !== newPage) {
       currentPage.value = newPage;
-      multiSearch();
+      submitSearch();
     }
 
     const newSearchQuery = newQuery.q as string;
     if (searchQuery.value !== newSearchQuery) {
       searchQuery.value = newSearchQuery || "";
+      inputQuery.value = newSearchQuery || "";
       currentPage.value = 1;
+
+      mediaType.value = (newQuery.media_type as string) || null;
+
       if (searchQuery.value) {
-        multiSearch();
+        submitSearch();
       }
     }
   },
   { deep: true },
 );
 
-const multiSearch = async () => {
+const submitSearch = async () => {
+  if (!inputQuery.value.trim()) return;
+
+  router.push({
+    query: {
+      ...route.query,
+      q: inputQuery.value,
+      page: 1,
+    },
+  });
+
   try {
+    isLoading.value = true;
     const token = config.public.TMDB_API_KEY;
-    const res: Results = await $fetch(`https://api.themoviedb.org/3/search/multi?query=${searchQuery.value}&include_adult=false&language=en-US&page=${currentPage.value}`, {
+    let endpoint = "multi";
+
+    if (mediaType.value === "movie" || mediaType.value === "tv") {
+      endpoint = mediaType.value;
+    }
+
+    const res: Results = await $fetch(`https://api.themoviedb.org/3/search/${endpoint}?query=${searchQuery.value}&include_adult=false&language=en-US&page=${currentPage.value}`, {
       method: "GET",
       headers: {
         accept: "application/json",
@@ -130,6 +168,8 @@ const multiSearch = async () => {
     console.log(searchResults.value);
   } catch (err) {
     console.error(err);
+  } finally {
+    isLoading.value = false;
   }
 };
 
@@ -144,7 +184,7 @@ const changePage = (page: number) => {
   });
 
   currentPage.value = page;
-  multiSearch();
+  submitSearch();
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 };
