@@ -28,19 +28,19 @@
                 <li class="font-light"><span class="font-semibold">Status:</span> {{ movieDetails?.status }}</li>
               </ul>
               <ul class="space-y-1">
-                <li class="font-light">
+                <li v-if="movieDetails?.spoken_languages.length" class="font-light">
                   <span class="font-semibold">Languages: </span>
                   <span v-for="(language, index) in movieDetails?.spoken_languages" :key="language.iso_639_1">
                     {{ language.english_name }}<span v-if="index < (movieDetails?.spoken_languages?.length ?? 0) - 1">, </span>
                   </span>
                 </li>
-                <li class="font-light">
+                <li v-if="movieDetails?.production_companies.length" class="font-light">
                   <span class="font-semibold">Production: </span>
                   <span v-for="(production, index) in movieDetails?.production_companies" :key="production.id">
                     {{ production.name }}<span v-if="index < (movieDetails?.production_companies?.length ?? 0) - 1">, </span>
                   </span>
                 </li>
-                <li class="font-light">
+                <li v-if="movieDetails?.production_countries.length" class="font-light">
                   <span class="font-semibold">{{ (movieDetails?.production_countries?.length ?? 0) === 1 ? "Production Country: " : "Production Countries: " }} </span>
                   <span v-for="(production, index) in movieDetails?.production_countries" :key="production.iso_3166_1">
                     {{ production.name }}<span v-if="index < (movieDetails?.production_countries?.length ?? 0) - 1">, </span>
@@ -59,59 +59,83 @@
     <section class="mx-auto max-w-7xl px-2 py-8 sm:py-12">
       <h3 class="flex items-center gap-2 pb-6 text-2xl font-bold"><Icon name="material-symbols:person-rounded" size="24" /> Cast</h3>
 
-      <!-- Mobile horizontal scroll for small screens -->
-      <article class="lg:hidden">
-        <div class="no-scrollbar -mx-2 flex snap-x snap-mandatory overflow-x-auto px-2 pb-4">
-          <NuxtLink
-            v-for="cast in movieDetails?.credits?.cast"
-            :key="cast.id"
-            :to="`/person/${cast.id}`"
-            class="mr-3 flex w-32 shrink-0 snap-start flex-col items-center rounded-lg p-3 transition-transform hover:scale-105"
-          >
-            <div class="relative mb-2 h-24 w-24 overflow-hidden rounded-full shadow-md">
-              <NuxtImg v-if="cast.profile_path" :src="getPosterUrl(cast.profile_path)" :alt="cast.name" class="h-full w-full object-cover" width="96" height="96" placeholder />
-              <div v-else class="flex h-full w-full items-center justify-center bg-gray-200 text-lg text-gray-500">
-                {{ cast.name.charAt(0) }}
+      <Splide :options="{ perPage: 5, perMove: 1, breakpoints: splideBreakpoints, pagination: false, gap: 14, lazyLoad: true }" aria-labelledby="cast">
+        <SplideSlide v-for="cast in movieDetails?.credits?.cast" :key="cast.id">
+          <NuxtLink :to="`/person/${cast.id}`" class="flex flex-col items-center overflow-hidden">
+            <div class="mb-2">
+              <div class="overflow-hidden rounded-lg transition-all duration-300">
+                <NuxtImg
+                  :src="cast.profile_path ? getPosterUrl(cast.profile_path) : '/images/no-image-placeholder.png'"
+                  :alt="cast.name"
+                  class="rounded-lg object-cover transition-transform duration-300 hover:scale-110"
+                  format="webp"
+                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 300px"
+                  width="400"
+                  height="550"
+                  placeholder
+                />
               </div>
             </div>
-            <h4 class="line-clamp-1 text-center text-sm font-semibold">{{ cast.name }}</h4>
-            <p class="text-neutral-content line-clamp-1 pt-1 text-center text-xs">{{ cast.character }}</p>
-          </NuxtLink>
-        </div>
-      </article>
-
-      <!-- Grid layout for larger screens -->
-      <article class="hidden lg:block">
-        <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-          <NuxtLink v-for="cast in displayedCast" :key="cast.id" :to="`/person/${cast.id}`" class="flex flex-col items-center rounded-lg p-3 transition-all hover:shadow-md">
-            <div class="relative mb-2 h-28 w-28 overflow-hidden rounded-full shadow-md md:h-32 md:w-32">
-              <NuxtImg v-if="cast.profile_path" :src="getPosterUrl(cast.profile_path)" :alt="cast.name" class="h-full w-full object-cover" width="128" height="128" placeholder />
-              <div v-else class="flex h-full w-full items-center justify-center bg-gray-200 text-2xl text-gray-500">
-                {{ cast.name.charAt(0) }}
-              </div>
+            <div class="py-2">
+              <h4 class="line-clamp-1 text-center text-sm font-semibold">{{ cast.name }}</h4>
+              <p class="text-neutral-content line-clamp-1 pt-1 text-center text-xs">{{ cast.character }}</p>
             </div>
-            <h4 class="line-clamp-1 text-center text-sm font-semibold">{{ cast.name }}</h4>
-            <p class="text-neutral-content line-clamp-1 pt-1 text-center text-xs">{{ cast.character }}</p>
           </NuxtLink>
-        </div>
+        </SplideSlide>
+      </Splide>
+
+      <h3 class="flex items-center gap-2 pt-6 pb-3 text-2xl font-bold"><Icon name="material-symbols:movie-sharp" size="24" /> Reviews</h3>
+
+      <article>
+        <ul v-if="reviews?.results.length" class="list bg-base-100 rounded-box">
+          <li v-for="review in reviews?.results" :key="review.id" class="list-row px-0 py-4">
+            <NuxtImg
+              class="rounded-box size-12 object-cover"
+              width="120"
+              height="120"
+              placeholder
+              :alt="review.author"
+              :src="review.author_details?.avatar_path ? getPosterUrl(review.author_details.avatar_path) : '/images/no-image-placeholder.png'"
+            />
+            <div>
+              <div class="flex items-center justify-between">
+                <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
+                  <h4 class="text-base font-semibold">{{ review.author }}</h4>
+                  <div v-if="review.author_details.rating" class="inline-flex w-fit items-center gap-1 rounded bg-black/60 px-2 py-1 text-sm">
+                    <Icon name="material-symbols:star" size="16" class="text-yellow-500" /> <span class="font-medium">{{ review.author_details.rating }}</span>
+                  </div>
+                  <div v-else class="inline-flex w-fit items-center gap-1 rounded bg-black/60 px-2 py-1 text-sm">
+                    <Icon name="material-symbols:star" size="16" class="text-yellow-500" /> <span class="font-medium">No review</span>
+                  </div>
+                </div>
+                <p class="text-base-content text-sm">{{ formatReleaseDate(review.created_at) }}</p>
+              </div>
+              <p class="text-base-content pt-2 text-xs sm:pt-1">{{ review.author_details.username ? review.author_details.username : "N/A" }}</p>
+            </div>
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <p class="list-col-wrap text-sm leading-6" v-html="review.content" />
+          </li>
+        </ul>
+
+        <p v-else class="text-base-content py-12 text-center text-sm">No reviews available.</p>
       </article>
 
-      <section class="mt-6 hidden items-center justify-center lg:flex">
-        <div class="flex space-x-2">
-          <button v-if="displayCount > 10" class="hover:bg-base-200 flex cursor-pointer items-center rounded-full px-3 py-1 text-sm transition-colors" @click="showLess">
-            <Icon name="heroicons:chevron-up" class="mr-1" size="16" />
-            Show Less
-          </button>
-          <button
-            v-if="displayCount < (movieDetails?.credits?.cast?.length || 0)"
-            class="hover:bg-base-200 flex cursor-pointer items-center rounded-full px-3 py-1 text-sm transition-colors"
-            @click="showMore"
-          >
-            <Icon name="heroicons:chevron-down" class="mr-1" size="16" />
-            Show More
-          </button>
-        </div>
-      </section>
+      <h3 class="flex items-center gap-2 py-6 text-2xl font-bold"><Icon name="material-symbols:movie-sharp" size="24" /> You may also like</h3>
+
+      <Splide :options="{ perPage: 4, perMove: 1, breakpoints: splideBreakpoints, pagination: false, gap: 14, lazyLoad: true }" aria-labelledby="cast">
+        <SplideSlide v-for="similar in similarMovies?.results || []" :key="similar.id">
+          <NuxtLink :to="`/movie/${similar.id}`" class="flex flex-col items-center overflow-hidden">
+            <MovieCard
+              :id="similar.id"
+              :title="similar.title"
+              :poster-path="getPosterUrl(similar.poster_path)"
+              :release-date="formatReleaseDate(similar.release_date)"
+              :average-rating="similar.vote_average"
+              :media-type="similar.media_type"
+            />
+          </NuxtLink>
+        </SplideSlide>
+      </Splide>
     </section>
   </div>
 </template>
@@ -135,8 +159,19 @@ interface MovieDetails {
   production_countries: ProductionCountry[];
   credits: {
     cast: MovieCast[];
-    crew: CrewMember[];
   };
+}
+
+interface SimilarMoviesResponse {
+  results: {
+    id: number;
+    title: string;
+    poster_path: string;
+    release_date: string;
+    vote_average: number;
+    media_type?: string;
+    genres?: Genre[];
+  }[];
 }
 
 interface Genre {
@@ -169,19 +204,37 @@ interface MovieCast {
   profile_path: string | null;
 }
 
-interface CrewMember {
-  id: number;
-  name: string;
-  job: string;
-  department: string;
-  profile_path: string | null;
+interface MovieReviews {
+  results: {
+    id: string;
+    author: string;
+    author_details: {
+      name: string;
+      username: string;
+      avatar_path?: string | null;
+      rating: number | null;
+    };
+    content: string;
+    created_at: string;
+  }[];
 }
 
 const route = useRoute();
 const config = useRuntimeConfig();
 const imageBaseUrl = ref("https://image.tmdb.org/t/p/w500");
 const backdropBaseUrl = ref("https://image.tmdb.org/t/p/original");
-const displayCount = ref(10);
+
+const splideBreakpoints = {
+  640: {
+    perPage: 2,
+  },
+  768: {
+    perPage: 3,
+  },
+  1024: {
+    perPage: 4,
+  },
+};
 
 const backdropStyle = computed(() => {
   const url = getBackdropUrl(movieDetails.value?.backdrop_path);
@@ -191,19 +244,6 @@ const backdropStyle = computed(() => {
       }
     : {};
 });
-
-const displayedCast = computed(() => {
-  return movieDetails.value?.credits?.cast?.slice(0, displayCount.value) || [];
-});
-
-const showMore = () => {
-  const totalCast = movieDetails.value?.credits?.cast?.length || 0;
-  displayCount.value = Math.min(displayCount.value + 10, totalCast);
-};
-
-const showLess = () => {
-  displayCount.value = Math.max(displayCount.value - 10, 10);
-};
 
 const getBackdropUrl = (backdropPath?: string) => {
   if (!backdropPath) return undefined;
@@ -227,6 +267,18 @@ const formatReleaseDate = (dateString: string | undefined): string => {
 };
 
 const { data: movieDetails } = await useFetch<MovieDetails>(`https://api.themoviedb.org/3/movie/${route.params.id}?language=en-US&append_to_response=credits`, {
+  headers: {
+    Authorization: `Bearer ${config.public.TMDB_API_KEY}`,
+  },
+});
+
+const { data: similarMovies } = await useFetch<SimilarMoviesResponse>(`https://api.themoviedb.org/3/movie/${route.params.id}/similar?language=en-US&page=1`, {
+  headers: {
+    Authorization: `Bearer ${config.public.TMDB_API_KEY}`,
+  },
+});
+
+const { data: reviews } = await useFetch<MovieReviews>(`https://api.themoviedb.org/3/movie/${route.params.id}/reviews?language=en-US&page=1`, {
   headers: {
     Authorization: `Bearer ${config.public.TMDB_API_KEY}`,
   },

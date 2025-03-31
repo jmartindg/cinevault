@@ -3,7 +3,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
-  modules: ["@nuxt/image", "@nuxt/icon", "@nuxt/fonts", "@nuxt/eslint"],
+  modules: ["@nuxt/image", "@nuxt/icon", "@nuxt/fonts", "@nuxt/eslint", "nuxt-splide"],
   app: {
     head: {
       title: "CineVault",
@@ -26,5 +26,8 @@ export default defineNuxtConfig({
     public: {
       TMDB_API_KEY: process.env.TMDB_API_KEY,
     },
+  },
+  splide: {
+    theme: "default",
   },
 });
