@@ -2,7 +2,7 @@
   <header class="bg-base-300">
     <div class="mx-auto max-w-7xl">
       <nav class="navbar items-center justify-between px-4 xl:px-0">
-        <p class="text-xl font-bold">CineVault</p>
+        <WebsiteLogo />
 
         <ul class="hidden items-center space-x-4 sm:flex">
           <li v-for="link in navLinks" :key="link.name">

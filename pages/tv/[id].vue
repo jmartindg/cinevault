@@ -59,7 +59,31 @@
     <section class="mx-auto max-w-7xl px-4 py-8 sm:py-12 xl:px-0">
       <h3 class="flex items-center gap-2 pb-6 text-2xl font-bold"><Icon name="material-symbols:person-rounded" size="24" /> Cast</h3>
 
-      <Splide v-if="tvShowDetails?.credits?.cast.length" :options="{ perPage: 5, perMove: 1, breakpoints: splideBreakpoints, pagination: false, gap: 14, lazyLoad: true }" aria-labelledby="cast">
+      <Splide
+        v-if="tvShowDetails?.credits?.cast.length"
+        :options="{
+          perPage: 5,
+          perMove: 1,
+          breakpoints: {
+            320: {
+              perPage: 2,
+            },
+            640: {
+              perPage: 3,
+            },
+            768: {
+              perPage: 4,
+            },
+            1024: {
+              perPage: 4,
+            },
+          },
+          pagination: false,
+          gap: 14,
+          lazyLoad: true,
+        }"
+        aria-labelledby="cast"
+      >
         <SplideSlide v-for="cast in tvShowDetails?.credits?.cast" :key="cast.id" class="flex flex-col items-center overflow-hidden">
           <div class="mb-2">
             <div class="overflow-hidden rounded-lg transition-all duration-300">
@@ -122,7 +146,31 @@
 
       <h3 class="flex items-center gap-2 py-6 text-2xl font-bold"><Icon name="material-symbols:movie-sharp" size="24" /> You may also like</h3>
 
-      <Splide v-if="similarTvShows?.results.length" :options="{ perPage: 4, perMove: 1, breakpoints: splideBreakpoints, pagination: false, gap: 14, lazyLoad: true }" aria-labelledby="cast">
+      <Splide
+        v-if="similarTvShows?.results.length"
+        :options="{
+          perPage: 4,
+          perMove: 1,
+          breakpoints: {
+            320: {
+              perPage: 2,
+            },
+            640: {
+              perPage: 3,
+            },
+            768: {
+              perPage: 4,
+            },
+            1024: {
+              perPage: 4,
+            },
+          },
+          pagination: false,
+          gap: 14,
+          lazyLoad: true,
+        }"
+        aria-labelledby="cast"
+      >
         <SplideSlide v-for="similar in similarTvShows?.results || []" :key="similar.id" class="flex flex-col items-center overflow-hidden">
           <MovieCard
             :id="similar.id"
@@ -223,27 +271,6 @@ const route = useRoute();
 const config = useRuntimeConfig();
 const imageBaseUrl = ref("https://image.tmdb.org/t/p/w500");
 const backdropBaseUrl = ref("https://image.tmdb.org/t/p/original");
-
-const splideBreakpoints = {
-  320: {
-    perPage: 2,
-  },
-  375: {
-    perPage: 2,
-  },
-  480: {
-    perPage: 2,
-  },
-  640: {
-    perPage: 3,
-  },
-  768: {
-    perPage: 4,
-  },
-  1024: {
-    perPage: 4,
-  },
-};
 
 const backdropStyle = computed(() => {
   const url = getBackdropUrl(tvShowDetails.value?.backdrop_path);
