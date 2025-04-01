@@ -33,7 +33,7 @@ const imageBaseUrl = ref("https://image.tmdb.org/t/p/original");
 const searchQuery = ref<string>("");
 const content = reactive<Content>({
   title: "Your Ultimate Movie & TV Shows Archive",
-  description: "Discover, track, and organize your favorite movies and TV shows all in one place.",
+  description: "Discover and view your favorite movies and TV shows all in one place.",
 });
 
 onMounted(() => {
