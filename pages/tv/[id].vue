@@ -86,24 +86,26 @@
         aria-labelledby="cast"
       >
         <SplideSlide v-for="cast in tvShowDetails?.credits?.cast" :key="cast.id" class="flex flex-col items-center overflow-hidden">
-          <div class="mb-2">
-            <div class="overflow-hidden rounded-lg transition-all duration-300">
-              <NuxtImg
-                :src="cast.profile_path ? getPosterUrl(cast.profile_path) : '/images/no-image-placeholder.png'"
-                :alt="cast.name"
-                class="rounded-lg object-cover transition-transform duration-300 hover:scale-110"
-                format="webp"
-                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 300px"
-                width="400"
-                height="550"
-                :placeholder="[400, 550]"
-              />
+          <NuxtLink :to="`/person/${cast.id}`">
+            <div class="mb-2">
+              <div class="overflow-hidden rounded-lg transition-all duration-300">
+                <NuxtImg
+                  :src="cast.profile_path ? getPosterUrl(cast.profile_path) : '/images/no-image-placeholder.png'"
+                  :alt="cast.name"
+                  class="rounded-lg object-cover transition-transform duration-300 hover:scale-110"
+                  format="webp"
+                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 300px"
+                  width="400"
+                  height="550"
+                  :placeholder="[400, 550]"
+                />
+              </div>
             </div>
-          </div>
-          <div class="py-2">
-            <h4 class="line-clamp-1 text-center text-sm font-semibold">{{ cast.name }}</h4>
-            <p class="text-neutral-content line-clamp-1 pt-1 text-center text-xs">{{ cast.character }}</p>
-          </div>
+            <div class="py-2">
+              <h4 class="line-clamp-1 text-center text-sm font-semibold">{{ cast.name }}</h4>
+              <p class="text-neutral-content line-clamp-1 pt-1 text-center text-xs">{{ cast.character }}</p>
+            </div>
+          </NuxtLink>
         </SplideSlide>
       </Splide>
 
