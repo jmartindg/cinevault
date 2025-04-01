@@ -109,6 +109,43 @@
 
       <p v-else class="text-base-content py-12 text-center text-sm">No cast available.</p>
 
+      <h3 class="flex items-center gap-2 pt-6 pb-3 text-2xl font-bold"><Icon name="material-symbols:featured-play-list-rounded" size="24" /> Seasons</h3>
+
+      <article>
+        <ul v-if="tvShowDetails?.seasons.length" class="list bg-base-100 rounded-box">
+          <li v-for="season in tvShowDetails?.seasons" :key="season.id" class="list-row px-0 py-4">
+            <NuxtImg
+              class="rounded-box size-12 object-cover"
+              width="120"
+              height="120"
+              :placeholder="[120, 120]"
+              :alt="season.name"
+              :src="season.poster_path ? getPosterUrl(season.poster_path) : '/images/no-image-placeholder.png'"
+            />
+            <div>
+              <div class="flex items-center gap-2 pb-1">
+                <h4 v-if="season.name" class="text-base font-semibold">{{ season.name }}</h4>
+                <p v-if="season.vote_average" class="inline-flex w-fit items-center gap-1 rounded bg-black/60 px-2 py-1 text-sm">
+                  <Icon name="material-symbols:star" size="16" class="text-yellow-500" /> <span class="font-medium">{{ season.vote_average.toFixed(1) }}</span>
+                </p>
+              </div>
+              <p v-if="season.air_date" class="text-base-content flex items-center gap-1 text-xs">
+                <Icon name="material-symbols:calendar-today-rounded" size="18" /> {{ formatReleaseDate(season.air_date) }}
+              </p>
+              <p v-else class="text-base-content flex items-center gap-1 text-xs"><Icon name="material-symbols:calendar-today-rounded" size="18" /> <span>No release date available</span></p>
+            </div>
+            <div class="list-col-wrap text-sm leading-6">
+              <p v-if="season.overview">{{ season.overview }}</p>
+              <p v-if="season.episode_count" class="pt-2 font-medium">
+                Episodes: <span class="font-normal">{{ season.episode_count }}</span>
+              </p>
+            </div>
+          </li>
+        </ul>
+
+        <p v-else class="text-base-content py-12 text-center text-sm">No seasons available.</p>
+      </article>
+
       <h3 class="flex items-center gap-2 pt-6 pb-3 text-2xl font-bold"><Icon name="material-symbols:movie-sharp" size="24" /> Reviews</h3>
 
       <article>
@@ -209,6 +246,16 @@ interface TvShowDetails {
   credits: {
     cast: TvShowCast[];
   };
+  seasons: {
+    air_date: string;
+    episode_count: number;
+    id: number;
+    name: string;
+    overview: string;
+    poster_path: string | null;
+    season_number: number;
+    vote_average: number;
+  }[];
 }
 
 interface SimilarTVShowsResponse {
