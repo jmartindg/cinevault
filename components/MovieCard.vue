@@ -1,6 +1,6 @@
 <template>
   <article class="w-full cursor-pointer overflow-hidden rounded-lg">
-    <NuxtLink :to="`/${mediaType}/${id}`">
+    <NuxtLink :to="getDetailUrl">
       <div class="relative overflow-hidden lg:h-[380px] xl:h-[450px]">
         <NuxtImg v-if="posterPath" :src="posterPath" :alt="title" class="h-full w-full object-cover transition-transform duration-500 hover:scale-105" placeholder />
         <NuxtImg v-else-if="profilePath" :src="profilePath" :alt="name" class="h-full w-full object-cover transition-transform duration-500 hover:scale-105" placeholder />
@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-defineProps({
+const props = defineProps({
   title: {
     type: String,
     required: false,
@@ -77,5 +77,17 @@ defineProps({
     required: false,
     default: "",
   },
+});
+
+const getDetailUrl = computed(() => {
+  if (!props.id) return "/";
+
+  if (props.mediaType) return `/${props.mediaType}/${props.id}`;
+
+  if (props.title) return `/movie/${props.id}`;
+  if (props.name && props.firstAirDate) return `/tv/${props.id}`;
+  if (props.name && props.profilePath) return `/person/${props.id}`;
+
+  return `/movie/${props.id}`;
 });
 </script>

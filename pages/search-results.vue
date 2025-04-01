@@ -24,7 +24,7 @@
           :profile-path="getPosterUrl(searchResult.profile_path)"
           :release-date="formatReleaseDate(searchResult.release_date)"
           :first-air-date="formatReleaseDate(searchResult.first_air_date)"
-          :media-type="searchResult.media_type"
+          :media-type="searchResult.media_type || defaultMediaType(searchResult)"
         />
       </section>
     </div>
@@ -203,6 +203,13 @@ const formatReleaseDate = (dateString: string): string => {
     day: "numeric",
     year: "numeric",
   });
+};
+
+const defaultMediaType = (item: SearchResults) => {
+  if (item.title) return "movie";
+  if (item.name && item.first_air_date) return "tv";
+  if (item.name && item.profile_path) return "person";
+  return "movie";
 };
 </script>
 

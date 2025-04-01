@@ -12,6 +12,7 @@
               sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 300px"
               width="300"
               height="450"
+              :placeholder="[300, 450]"
             />
           </section>
           <article class="flex flex-col justify-start md:col-span-8 lg:col-span-9">
@@ -96,7 +97,7 @@
                   sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 300px"
                   width="400"
                   height="550"
-                  placeholder
+                  :placeholder="[400, 550]"
                 />
               </div>
             </div>
@@ -119,7 +120,7 @@
               class="rounded-box size-12 object-cover"
               width="120"
               height="120"
-              placeholder
+              :placeholder="[120, 120]"
               :alt="review.author"
               :src="review.author_details?.avatar_path ? getPosterUrl(review.author_details.avatar_path) : '/images/no-image-placeholder.png'"
             />
