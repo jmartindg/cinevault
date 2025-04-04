@@ -18,28 +18,27 @@
 </template>
 
 <script setup lang="ts">
-interface TrendingMovie {
-  title: string;
-  poster_path: string;
-  release_date: string;
-  vote_average: number;
-  id: number;
-  media_type: string;
-}
-
-interface Results {
-  results: TrendingMovie[];
+interface TrendingMovieResponse {
+  results: {
+    id: number;
+    title: string;
+    vote_average: number;
+    poster_path: string;
+    release_date: string;
+    media_type: string;
+  }[];
 }
 
 const config = useRuntimeConfig();
-const trendingMovies = ref<TrendingMovie[]>([]);
-const loading = ref(true);
-const error = ref(null as string | null);
 const imageBaseUrl = ref("https://image.tmdb.org/t/p/w500");
 
-onMounted(() => {
-  getTrendingMovies();
+const { data: trendingMoviesResponse } = await useFetch<TrendingMovieResponse>("https://api.themoviedb.org/3/trending/movie/week?language=en-US", {
+  headers: {
+    Authorization: `Bearer ${config.public.TMDB_API_KEY}`,
+  },
 });
+
+const trendingMovies = computed(() => trendingMoviesResponse.value?.results || []);
 
 const getPosterUrl = (posterPath: string) => {
   if (!posterPath) return undefined;
@@ -55,26 +54,6 @@ const formatReleaseDate = (dateString: string): string => {
     day: "numeric",
     year: "numeric",
   });
-};
-
-const getTrendingMovies = async () => {
-  try {
-    loading.value = true;
-    const token = config.public.TMDB_API_KEY;
-    const res: Results = await $fetch("https://api.themoviedb.org/3/trending/movie/week?language=en-US", {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    trendingMovies.value = res.results;
-  } catch (err) {
-    console.error(err);
-    error.value = "Failed to fetch trending movies";
-  } finally {
-    loading.value = false;
-  }
 };
 </script>
 

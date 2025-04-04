@@ -10,6 +10,7 @@
             <Icon name="material-symbols:star" size="16" class="text-yellow-500" />
             <span v-if="averageRating">{{ averageRating.toFixed(1) }}</span>
             <span v-else-if="popularity">{{ popularity.toFixed(1) }}</span>
+            <span v-else>Not Rated</span>
           </div>
         </div>
       </div>

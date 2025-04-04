@@ -14,6 +14,9 @@
               height="450"
               :placeholder="[300, 450]"
             />
+            <div v-if="trailerUrl" class="mt-4">
+              <NuxtLink :to="trailerUrl" class="btn btn-primary flex w-full items-center" target="_blank"><Icon name="material-symbols:play-circle-rounded" size="20" /> Watch trailer</NuxtLink>
+            </div>
           </section>
           <article class="flex flex-col justify-start md:col-span-8 lg:col-span-9">
             <h2 class="text-2xl font-bold sm:text-3xl">{{ tvShowDetails?.name }}</h2>
@@ -317,6 +320,17 @@ interface TvShowsReviews {
   }[];
 }
 
+interface TVShowTrailer {
+  id: number;
+  results: {
+    id: string;
+    key: string;
+    name: string;
+    site: string;
+    type: string;
+  }[];
+}
+
 const route = useRoute();
 const config = useRuntimeConfig();
 const imageBaseUrl = ref("https://image.tmdb.org/t/p/w500");
@@ -368,6 +382,19 @@ const { data: reviews } = await useFetch<TvShowsReviews>(`https://api.themoviedb
   headers: {
     Authorization: `Bearer ${config.public.TMDB_API_KEY}`,
   },
+});
+
+const { data: trailers } = await useFetch<TVShowTrailer>(`https://api.themoviedb.org/3/tv/${route.params.id}/videos?language=en-US`, {
+  headers: {
+    Authorization: `Bearer ${config.public.TMDB_API_KEY}`,
+  },
+});
+
+const trailer = trailers.value?.results.find((trailer) => trailer.type === "Trailer" && trailer.site === "YouTube");
+
+const trailerUrl = computed(() => {
+  if (!trailer) return undefined;
+  return `https://www.youtube.com/watch?v=${trailer.key}`;
 });
 </script>
 
