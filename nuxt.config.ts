@@ -27,6 +27,7 @@ export default defineNuxtConfig({
   image: {
     domains: ["image.tmdb.org"],
     formats: ["webp"],
+    provider: "none", // Disable the default image provider and image optimization in Vercel
   },
   runtimeConfig: {
     TMDB_API_KEY: process.env.TMDB_API_KEY,
