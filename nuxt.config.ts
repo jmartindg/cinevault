@@ -4,6 +4,9 @@ export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
   modules: ["@nuxt/image", "@nuxt/icon", "@nuxt/fonts", "@nuxt/eslint", "nuxt-splide"],
+  nitro: {
+    preset: "cloudflare-pages",
+  },
   app: {
     head: {
       title: "CineVault",
@@ -21,12 +24,12 @@ export default defineNuxtConfig({
     },
   },
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [tailwindcss() as any],
   },
   css: ["~/assets/app.css"],
   image: {
     domains: ["image.tmdb.org"],
-    formats: ["webp"],
+    format: ["webp"],
   },
   runtimeConfig: {
     TMDB_API_KEY: process.env.TMDB_API_KEY,
