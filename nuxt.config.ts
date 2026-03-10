@@ -3,7 +3,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
-  modules: ["@nuxt/image", "@nuxt/icon", "@nuxt/fonts", "@nuxt/eslint", "nuxt-splide"],
+  modules: ["@nuxt/image", "@nuxt/icon", "@nuxt/fonts", "@nuxt/eslint", "nuxt-splide", "@nuxtjs/turnstile"],
   nitro: {
     preset: "cloudflare-pages",
   },
@@ -31,8 +31,15 @@ export default defineNuxtConfig({
     domains: ["image.tmdb.org"],
     format: ["webp"],
   },
+  turnstile: {
+    siteKey: process.env.NUXT_PUBLIC_TURNSTILE_SITE_KEY,
+    addValidateEndpoint: true,
+  },
   runtimeConfig: {
     TMDB_API_KEY: process.env.TMDB_API_KEY,
+    turnstile: {
+      secretKey: process.env.NUXT_TURNSTILE_SECRET_KEY,
+    },
   },
   splide: {
     theme: "default",
