@@ -21,6 +21,10 @@ A movie and TV show discovery app built with Nuxt 4, Tailwind CSS, and DaisyUI. 
 
 Deployed on Cloudflare Pages.
 
+## Bot Protection
+
+Cloudflare Turnstile is used to verify visitors. New users are prompted to complete a quick verification, then can browse freely for 24 hours.
+
 ## API Caching
 
 Server-side caching is enabled to reduce API calls and improve performance:
@@ -44,10 +48,12 @@ Install dependencies:
 npm install
 ```
 
-Create a `.env` file with your TMDB API key:
+Create a `.env` file with your API keys:
 
 ```
 TMDB_API_KEY=your_tmdb_api_key
+NUXT_PUBLIC_TURNSTILE_SITE_KEY=your_turnstile_site_key
+NUXT_TURNSTILE_SECRET_KEY=your_turnstile_secret_key
 ```
 
 Start the development server:
