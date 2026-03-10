@@ -27,7 +27,6 @@ interface Results {
   results: BackdropImage[];
 }
 
-const config = useRuntimeConfig();
 const backdropPath = ref<string>("");
 const imageBaseUrl = ref("https://image.tmdb.org/t/p/original");
 const searchQuery = ref<string>("");
@@ -56,14 +55,7 @@ const getBackdropUrl = (backdropPath: string) => {
 
 const getBackdropPath = async () => {
   try {
-    const token = config.public.TMDB_API_KEY;
-    const res: Results = await $fetch("https://api.themoviedb.org/3/trending/all/week?language=en-US", {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const res: Results = await $fetch("/api/tmdb/trending/all");
     if (res.results && res.results.length > 0) {
       const randomIndex = Math.floor(Math.random() * res.results.length);
       backdropPath.value = res.results[randomIndex].backdrop_path;

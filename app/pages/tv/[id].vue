@@ -332,7 +332,6 @@ interface TVShowTrailer {
 }
 
 const route = useRoute();
-const config = useRuntimeConfig();
 const imageBaseUrl = ref("https://image.tmdb.org/t/p/w500");
 const backdropBaseUrl = ref("https://image.tmdb.org/t/p/original");
 
@@ -366,29 +365,13 @@ const formatReleaseDate = (dateString: string | undefined): string => {
   });
 };
 
-const { data: tvShowDetails } = await useFetch<TvShowDetails>(`https://api.themoviedb.org/3/tv/${route.params.id}?language=en-US&append_to_response=credits`, {
-  headers: {
-    Authorization: `Bearer ${config.public.TMDB_API_KEY}`,
-  },
-});
+const { data: tvShowDetails } = await useFetch<TvShowDetails>(`/api/tmdb/tv/${route.params.id}`);
 
-const { data: similarTvShows } = await useFetch<SimilarTVShowsResponse>(`https://api.themoviedb.org/3/tv/${route.params.id}/similar?language=en-US&page=1`, {
-  headers: {
-    Authorization: `Bearer ${config.public.TMDB_API_KEY}`,
-  },
-});
+const { data: similarTvShows } = await useFetch<SimilarTVShowsResponse>(`/api/tmdb/tv/${route.params.id}/similar`);
 
-const { data: reviews } = await useFetch<TvShowsReviews>(`https://api.themoviedb.org/3/tv/${route.params.id}/reviews?language=en-US&page=1`, {
-  headers: {
-    Authorization: `Bearer ${config.public.TMDB_API_KEY}`,
-  },
-});
+const { data: reviews } = await useFetch<TvShowsReviews>(`/api/tmdb/tv/${route.params.id}/reviews`);
 
-const { data: trailers } = await useFetch<TVShowTrailer>(`https://api.themoviedb.org/3/tv/${route.params.id}/videos?language=en-US`, {
-  headers: {
-    Authorization: `Bearer ${config.public.TMDB_API_KEY}`,
-  },
-});
+const { data: trailers } = await useFetch<TVShowTrailer>(`/api/tmdb/tv/${route.params.id}/videos`);
 
 const trailer = trailers.value?.results.find((trailer) => trailer.type === "Trailer" && trailer.site === "YouTube");
 

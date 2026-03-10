@@ -33,9 +33,6 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     TMDB_API_KEY: process.env.TMDB_API_KEY,
-    public: {
-      TMDB_API_KEY: process.env.TMDB_API_KEY,
-    },
   },
   splide: {
     theme: "default",

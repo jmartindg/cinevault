@@ -75,7 +75,6 @@ interface Results {
 
 const route = useRoute();
 const router = useRouter();
-const config = useRuntimeConfig();
 const searchQuery = ref<string>("");
 const popularMovies = ref<PopularMovie[]>([]);
 const page = ref(parseInt(route.query.page as string) || 1);
@@ -121,14 +120,7 @@ const formatReleaseDate = (dateString: string): string => {
 const getPopularMovies = async () => {
   try {
     loading.value = true;
-    const token = config.public.TMDB_API_KEY;
-    const res: Results = await $fetch(`https://api.themoviedb.org/3/movie/popular?language=en-US&page=${page.value}&region=PH`, {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const res: Results = await $fetch(`/api/tmdb/movie/popular?page=${page.value}`);
     popularMovies.value = res.results;
     totalPages.value = res.total_pages || 0;
     totalResults.value = res.total_results || 0;

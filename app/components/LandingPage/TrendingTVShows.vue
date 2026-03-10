@@ -29,14 +29,9 @@ interface TrendingTVShows {
   }[];
 }
 
-const config = useRuntimeConfig();
 const imageBaseUrl = ref("https://image.tmdb.org/t/p/w500");
 
-const { data: trendingTVShowsResponse } = await useFetch<TrendingTVShows>("https://api.themoviedb.org/3/trending/tv/week?language=en-US", {
-  headers: {
-    Authorization: `Bearer ${config.public.TMDB_API_KEY}`,
-  },
-});
+const { data: trendingTVShowsResponse } = await useFetch<TrendingTVShows>("/api/tmdb/trending/tv");
 
 const trendingTVShows = computed(() => trendingTVShowsResponse.value?.results || []);
 

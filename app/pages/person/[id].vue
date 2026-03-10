@@ -68,7 +68,6 @@ interface PersonDetails {
 }
 
 const route = useRoute();
-const config = useRuntimeConfig();
 const imageBaseUrl = ref("https://image.tmdb.org/t/p/w500");
 
 const getPosterUrl = (posterPath?: string | null) => {
@@ -87,11 +86,7 @@ const formatReleaseDate = (dateString: string | undefined): string => {
   });
 };
 
-const { data: personDetails } = await useFetch<PersonDetails>(`https://api.themoviedb.org/3/person/${route.params.id}?language=en-US`, {
-  headers: {
-    Authorization: `Bearer ${config.public.TMDB_API_KEY}`,
-  },
-});
+const { data: personDetails } = await useFetch<PersonDetails>(`/api/tmdb/person/${route.params.id}`);
 </script>
 
 <style scoped></style>

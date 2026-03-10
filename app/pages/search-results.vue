@@ -89,7 +89,6 @@ interface Results {
   total_results: number;
 }
 
-const config = useRuntimeConfig();
 const route = useRoute();
 const router = useRouter();
 const isLoading = ref(false);
@@ -146,26 +145,17 @@ const submitSearch = async () => {
 
   try {
     isLoading.value = true;
-    const token = config.public.TMDB_API_KEY;
-    let endpoint = "multi";
+    let type = "multi";
 
     if (mediaType.value === "movie" || mediaType.value === "tv") {
-      endpoint = mediaType.value;
+      type = mediaType.value;
     }
 
-    const res: Results = await $fetch(`https://api.themoviedb.org/3/search/${endpoint}?query=${searchQuery.value}&include_adult=false&language=en-US&page=${currentPage.value}`, {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const res: Results = await $fetch(`/api/tmdb/search?query=${encodeURIComponent(searchQuery.value)}&type=${type}&page=${currentPage.value}`);
 
     searchResults.value = res.results || [];
     totalPages.value = res.total_pages || 0;
     totalResults.value = res.total_results || 0;
-
-    console.log(searchResults.value);
   } catch (err) {
     console.error(err);
   } finally {

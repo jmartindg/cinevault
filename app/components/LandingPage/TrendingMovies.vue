@@ -29,14 +29,9 @@ interface TrendingMovieResponse {
   }[];
 }
 
-const config = useRuntimeConfig();
 const imageBaseUrl = ref("https://image.tmdb.org/t/p/w500");
 
-const { data: trendingMoviesResponse } = await useFetch<TrendingMovieResponse>("https://api.themoviedb.org/3/trending/movie/week?language=en-US", {
-  headers: {
-    Authorization: `Bearer ${config.public.TMDB_API_KEY}`,
-  },
-});
+const { data: trendingMoviesResponse } = await useFetch<TrendingMovieResponse>("/api/tmdb/trending/movie");
 
 const trendingMovies = computed(() => trendingMoviesResponse.value?.results || []);
 
