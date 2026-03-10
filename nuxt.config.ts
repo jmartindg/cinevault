@@ -37,4 +37,13 @@ export default defineNuxtConfig({
   splide: {
     theme: "default",
   },
+  fonts: {
+    families: [
+      {
+        name: "Montserrat",
+        provider: "google",
+        weights: [400, 500, 600, 700],
+      },
+    ],
+  },
 });
